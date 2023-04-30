@@ -118,17 +118,17 @@ export default function Prompt({ duration, location, activities }: PromptProps) 
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: input,
-      max_tokens: 128
+      max_tokens: 64
     });
 
     return completion.data.choices[0].text;
   }, [])
 
   const generatePrompt = useCallback(async () => {
-    // const res = await generateResponse(prompt!);
-    // const loc = await generateResponse("Return an array of strings of locations from the following string: " + res + ". It should be in the format of location1, location2, location3");
-    const res = prompt;
-    const loc = "China, Sweden, Japan, Korea, New York";
+    const res = await generateResponse(prompt!);
+    const loc = await generateResponse("Return an array of strings of locations from the following string: " + res + ". It should be in the format of location1, location2, location3");
+    // const res = prompt;
+    // const loc = "China, Sweden, Japan, Korea, New York";
     setResponse(res || '');
     setLocations(loc || '');
   }, [generateResponse, prompt]);
@@ -155,12 +155,12 @@ export default function Prompt({ duration, location, activities }: PromptProps) 
   const [copied, setCopied] = useState<boolean>(true)
 
   const copyClipboard = useCallback(() => {
-    navigator.clipboard.writeText("abc123")
+    navigator.clipboard.writeText(response)
     setTimeout(() => {
       setCopied(true)
     }, COPIED_TIMEOUT)
     setCopied(false)
-  }, [])
+  }, [response])
 
   const [emailAddress, setEmailAddress] = useState<string>('')
 

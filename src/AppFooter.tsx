@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { CountryType } from './Location';
 import { Verified } from '@mui/icons-material';
@@ -14,6 +14,7 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { States } from './App';
+import { useSpring, animated, config } from 'react-spring';
 
 interface AppFooterProps {
   handlePrevClick: () => void
@@ -26,6 +27,13 @@ interface AppFooterProps {
 }
 
 export default function AppHeader({ handlePrevClick, handleNextClick, state, setState, duration, location, activities }: AppFooterProps) {
+  const animationProps = useSpring({
+    transform: "translateX(0%)",
+    opacity: 1,
+    from: { transform: "translateX(-100%)", opacity: 0 },
+    config: { ...config.default, duration: 500 },
+    reset: true
+  });
 
   return (
     <Drawer variant="permanent" anchor="bottom" >
@@ -42,14 +50,14 @@ export default function AppHeader({ handlePrevClick, handleNextClick, state, set
           {state !== States.Prompt ?
             (duration && location && activities.length > 0 ?
               (
-                <>
+                <animated.div style={animationProps}>
                   <Button variant='outlined' onClick={() => setState(States.Prompt)}>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                       TravelGPT
                     </Typography>
                     <Verified sx={{ color: 'blue', flexGrow: 1, pl: 1 }} />
                   </Button>
-                </>
+                </animated.div>
               ) : (
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                   TravelGPT

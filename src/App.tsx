@@ -5,13 +5,13 @@ import Activities from './Activities';
 import Duration from './Duration';
 import Prompt from './Prompt';
 
-import {
-  Box, Dialog, DialogActions, DialogContent, DialogTitle
-} from '@mui/material';
+import { Box } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
 import StartDialog from './StartDialog';
+
+import { useSpring, animated, config } from 'react-spring';
 
 export enum States {
   Start = 0,
@@ -26,6 +26,20 @@ export enum States {
 
 export default function App() {
   const [state, setState] = useState<States>(States.Start);
+
+  const [animationProps, setAnimationProps] = useSpring(() => ({
+    opacity: 1,
+    transform: 'translate3d(0, 0, 0)',
+    config: config.default,
+  }));
+
+  useEffect(() => {
+    setAnimationProps({ opacity: 1, transform: 'translate3d(0, 0, 0)' });
+    return () => {
+      setAnimationProps({ opacity: 0, transform: 'translate3d(0, -50px, 0)' });
+    };
+  }, [state, setAnimationProps]);
+
 
   const handlePrevClick = () => {
     if (state > 0) {
@@ -56,16 +70,64 @@ export default function App() {
   return (
     <>
       <Box sx={{ height: '100vh', overflow: 'hidden' }}>
-        <AppHeader setState={setState} startDate={startDate} endDate={endDate} duration={duration} location={location} activities={activities} />
+        <AppHeader
+          setState={setState}
+          startDate={startDate}
+          endDate={endDate}
+          duration={duration}
+          location={location}
+          activities={activities}
+        />
 
-        {state === States.Start ? <StartDialog handleNextClick={handleNextClick} /> : null}
-        {state === States.Duration ? <Duration handleNextClick={handleNextClick} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} /> : null}
-        {state === States.Location ? <Location handleNextClick={handleNextClick} location={location} setLocation={setLocation} /> : null}
-        {state === States.Activities ? <Activities activities={activities} setActivities={setActivities} /> : null}
-        {state === States.Prompt && duration && location && activities.length > 0 ? <Prompt duration={duration} location={location} activities={activities} /> : null}
+        <animated.div style={animationProps}>
+          {state === States.Start ? (
+            <StartDialog handleNextClick={handleNextClick} />
+          ) : null}
+          {state === States.Duration ? (
+            <Duration
+              handleNextClick={handleNextClick}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            />
+          ) : null}
+          {state === States.Location ? (
+            <Location
+              handleNextClick={handleNextClick}
+              location={location}
+              setLocation={setLocation}
+            />
+          ) : null}
+          {state === States.Activities ? (
+            <Activities
+              activities={activities}
+              setActivities={setActivities}
+            />
+          ) : null}
+          {state === States.Prompt &&
+            duration &&
+            location &&
+            activities.length > 0 ? (
+            <Prompt
+              duration={duration}
+              location={location}
+              activities={activities}
+            />
+          ) : null}
+        </animated.div>
 
-        <AppFooter handlePrevClick={handlePrevClick} handleNextClick={handleNextClick} state={state} setState={setState} duration={duration} location={location} activities={activities} />
+        <AppFooter
+          handlePrevClick={handlePrevClick}
+          handleNextClick={handleNextClick}
+          state={state}
+          setState={setState}
+          duration={duration}
+          location={location}
+          activities={activities}
+        />
       </Box>
     </>
   );
+
 }
