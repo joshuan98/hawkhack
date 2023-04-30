@@ -23,7 +23,7 @@ export enum States {
 }
 
 export default function App() {
-  const [state, setState] = useState<States>(States.Duration);
+  const [state, setState] = useState<States>(States.Prompt);
 
   const handlePrevClick = () => {
     if (state > 0) {
@@ -59,7 +59,7 @@ export default function App() {
         {state === States.Duration ? <Duration handleNextClick={handleNextClick} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} /> : null}
         {state === States.Location ? <Location handleNextClick={handleNextClick} location={location} setLocation={setLocation} /> : null}
         {state === States.Activities ? <Activities activities={activities} setActivities={setActivities} /> : null}
-        {state === States.Prompt ? <Prompt /> : null}
+        {state === States.Prompt ? <Prompt duration={duration} location={location} activities={activities} /> : null}
 
         <AppFooter handlePrevClick={handlePrevClick} handleNextClick={handleNextClick} state={state} setState={setState} duration={duration} location={location} activities={activities} />
       </Box>

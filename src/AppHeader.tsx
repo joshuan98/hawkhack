@@ -73,7 +73,7 @@ export default function AppHeader({ setState, startDate, endDate, duration, loca
           </ListItemIcon>
           {location ? (
             <Typography>
-              {"Location: " + location.label}
+              {"Location: " + location.name}
             </Typography>
           ) : (
             <Typography>
