@@ -39,17 +39,22 @@ export default function AppHeader({ handlePrevClick, handleNextClick, state, set
       }}>
         <Box />
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-
-          {duration && location && activities.length > 0 ?
-            (
-              <>
-                <Button variant='outlined' onClick={() => setState(States.Prompt)}>
-                  <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    TravelGPT
-                  </Typography>
-                  <Verified sx={{ color: 'blue', flexGrow: 1, pl: 1 }} />
-                </Button>
-              </>
+          {state !== States.Prompt ?
+            (duration && location && activities.length > 0 ?
+              (
+                <>
+                  <Button variant='outlined' onClick={() => setState(States.Prompt)}>
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                      TravelGPT
+                    </Typography>
+                    <Verified sx={{ color: 'blue', flexGrow: 1, pl: 1 }} />
+                  </Button>
+                </>
+              ) : (
+                <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                  TravelGPT
+                </Typography>
+              )
             ) : (
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
                 TravelGPT
@@ -57,14 +62,16 @@ export default function AppHeader({ handlePrevClick, handleNextClick, state, set
             )}
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton color="inherit" onClick={handlePrevClick}>
-            <ArrowBackIosNewIcon />
-          </IconButton>
-          <IconButton color="inherit" onClick={handleNextClick}>
-            <ArrowForwardIosIcon />
-          </IconButton>
-        </Box>
+        {state !== States.Prompt && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton color="inherit" onClick={handlePrevClick}>
+              <ArrowBackIosNewIcon />
+            </IconButton>
+            <IconButton color="inherit" onClick={handleNextClick}>
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Box>
+        )}
       </Toolbar>
     </Drawer>
   );

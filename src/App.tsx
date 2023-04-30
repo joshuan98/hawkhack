@@ -6,24 +6,26 @@ import Duration from './Duration';
 import Prompt from './Prompt';
 
 import {
-  Box
+  Box, Dialog, DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
+import StartDialog from './StartDialog';
 
 export enum States {
-  Duration = 0,
-  Location = 1,
-  Activities = 2,
-  Food = 3,
-  Hotels = 4,
-  Transport = 5,
+  Start = 0,
+  Duration = 1,
+  Location = 2,
+  Activities = 3,
+  Food = 4,
+  Hotels = 5,
+  Transport = 6,
   Prompt = 99
 }
 
 export default function App() {
-  const [state, setState] = useState<States>(States.Prompt);
+  const [state, setState] = useState<States>(States.Start);
 
   const handlePrevClick = () => {
     if (state > 0) {
@@ -43,7 +45,7 @@ export default function App() {
 
   useEffect(() => {
     if (startDate && endDate) {
-      const duration = dayjs(endDate).diff(dayjs(startDate), 'day');
+      const duration = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
       setDuration(duration)
     }
   }, [endDate, startDate])
@@ -56,10 +58,11 @@ export default function App() {
       <Box sx={{ height: '100vh', overflow: 'hidden' }}>
         <AppHeader setState={setState} startDate={startDate} endDate={endDate} duration={duration} location={location} activities={activities} />
 
+        {state === States.Start ? <StartDialog handleNextClick={handleNextClick} /> : null}
         {state === States.Duration ? <Duration handleNextClick={handleNextClick} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} /> : null}
         {state === States.Location ? <Location handleNextClick={handleNextClick} location={location} setLocation={setLocation} /> : null}
         {state === States.Activities ? <Activities activities={activities} setActivities={setActivities} /> : null}
-        {state === States.Prompt ? <Prompt duration={duration} location={location} activities={activities} /> : null}
+        {state === States.Prompt && duration && location && activities.length > 0 ? <Prompt duration={duration} location={location} activities={activities} /> : null}
 
         <AppFooter handlePrevClick={handlePrevClick} handleNextClick={handleNextClick} state={state} setState={setState} duration={duration} location={location} activities={activities} />
       </Box>
